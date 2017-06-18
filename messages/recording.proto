@@ -1,0 +1,11 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+import "ovr_device.proto";
+
+message Recording {
+	google.protobuf.Timestamp start = 1;
+	google.protobuf.Timestamp end = 2;
+
+	repeated OVRDevice devices = 3;
+	repeated OVRTimeline timeline = 4;
+}

@@ -1,0 +1,6 @@
+[submodule "thirdparty/openvr"]
+	path = thirdparty/openvr
+	url = https://github.com/ValveSoftware/openvr.git
+[submodule "thirdparty/protobuf"]
+	path = thirdparty/protobuf
+	url = git@github.com:lebek/protobuf.git
