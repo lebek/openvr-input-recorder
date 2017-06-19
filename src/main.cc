@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <openvr.h>
+#include <vrinputemulator.h>
 #include "generated/ovr_device.pb.h"
 #include "generated/recording.pb.h"
 #include <fstream>
@@ -10,6 +11,9 @@
 int main (int argc, char *argv[])
 {
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+	vrinputemulator::VRInputEmulator inputEmulator;
+	inputEmulator.connect();
 
 	vr::HmdError err;
 	vr::IVRSystem *p = vr::VR_Init(&err, vr::VRApplication_Background);
