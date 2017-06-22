@@ -335,10 +335,10 @@ class OVRDevice : public ::google::protobuf::Message /* @@protoc_insertion_point
 
   // accessors -------------------------------------------------------
 
-  // repeated .OVRDeviceProperty properties = 3;
+  // repeated .OVRDeviceProperty properties = 4;
   int properties_size() const;
   void clear_properties();
-  static const int kPropertiesFieldNumber = 3;
+  static const int kPropertiesFieldNumber = 4;
   const ::OVRDeviceProperty& properties(int index) const;
   ::OVRDeviceProperty* mutable_properties(int index);
   ::OVRDeviceProperty* add_properties();
@@ -347,15 +347,21 @@ class OVRDevice : public ::google::protobuf::Message /* @@protoc_insertion_point
   const ::google::protobuf::RepeatedPtrField< ::OVRDeviceProperty >&
       properties() const;
 
-  // int32 device_class = 1;
+  // int32 id = 1;
+  void clear_id();
+  static const int kIdFieldNumber = 1;
+  ::google::protobuf::int32 id() const;
+  void set_id(::google::protobuf::int32 value);
+
+  // int32 device_class = 2;
   void clear_device_class();
-  static const int kDeviceClassFieldNumber = 1;
+  static const int kDeviceClassFieldNumber = 2;
   ::google::protobuf::int32 device_class() const;
   void set_device_class(::google::protobuf::int32 value);
 
-  // int32 controller_role = 2;
+  // int32 controller_role = 3;
   void clear_controller_role();
-  static const int kControllerRoleFieldNumber = 2;
+  static const int kControllerRoleFieldNumber = 3;
   ::google::protobuf::int32 controller_role() const;
   void set_controller_role(::google::protobuf::int32 value);
 
@@ -364,6 +370,7 @@ class OVRDevice : public ::google::protobuf::Message /* @@protoc_insertion_point
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::RepeatedPtrField< ::OVRDeviceProperty > properties_;
+  ::google::protobuf::int32 id_;
   ::google::protobuf::int32 device_class_;
   ::google::protobuf::int32 controller_role_;
   mutable int _cached_size_;
@@ -574,10 +581,10 @@ class OVRTimeline : public ::google::protobuf::Message /* @@protoc_insertion_poi
 
   // accessors -------------------------------------------------------
 
-  // repeated .OVRSample samples = 1;
+  // repeated .OVRSample samples = 2;
   int samples_size() const;
   void clear_samples();
-  static const int kSamplesFieldNumber = 1;
+  static const int kSamplesFieldNumber = 2;
   const ::OVRSample& samples(int index) const;
   ::OVRSample* mutable_samples(int index);
   ::OVRSample* add_samples();
@@ -586,11 +593,18 @@ class OVRTimeline : public ::google::protobuf::Message /* @@protoc_insertion_poi
   const ::google::protobuf::RepeatedPtrField< ::OVRSample >&
       samples() const;
 
+  // int32 device_id = 1;
+  void clear_device_id();
+  static const int kDeviceIdFieldNumber = 1;
+  ::google::protobuf::int32 device_id() const;
+  void set_device_id(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:OVRTimeline)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::RepeatedPtrField< ::OVRSample > samples_;
+  ::google::protobuf::int32 device_id_;
   mutable int _cached_size_;
   friend struct protobuf_ovr_5fdevice_2eproto::TableStruct;
 };
@@ -773,7 +787,21 @@ OVRDeviceProperty::mutable_matrix34_value() {
 
 // OVRDevice
 
-// int32 device_class = 1;
+// int32 id = 1;
+inline void OVRDevice::clear_id() {
+  id_ = 0;
+}
+inline ::google::protobuf::int32 OVRDevice::id() const {
+  // @@protoc_insertion_point(field_get:OVRDevice.id)
+  return id_;
+}
+inline void OVRDevice::set_id(::google::protobuf::int32 value) {
+  
+  id_ = value;
+  // @@protoc_insertion_point(field_set:OVRDevice.id)
+}
+
+// int32 device_class = 2;
 inline void OVRDevice::clear_device_class() {
   device_class_ = 0;
 }
@@ -787,7 +815,7 @@ inline void OVRDevice::set_device_class(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:OVRDevice.device_class)
 }
 
-// int32 controller_role = 2;
+// int32 controller_role = 3;
 inline void OVRDevice::clear_controller_role() {
   controller_role_ = 0;
 }
@@ -801,7 +829,7 @@ inline void OVRDevice::set_controller_role(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:OVRDevice.controller_role)
 }
 
-// repeated .OVRDeviceProperty properties = 3;
+// repeated .OVRDeviceProperty properties = 4;
 inline int OVRDevice::properties_size() const {
   return properties_.size();
 }
@@ -1001,7 +1029,21 @@ inline void OVRSample::set_button_touched(::google::protobuf::uint64 value) {
 
 // OVRTimeline
 
-// repeated .OVRSample samples = 1;
+// int32 device_id = 1;
+inline void OVRTimeline::clear_device_id() {
+  device_id_ = 0;
+}
+inline ::google::protobuf::int32 OVRTimeline::device_id() const {
+  // @@protoc_insertion_point(field_get:OVRTimeline.device_id)
+  return device_id_;
+}
+inline void OVRTimeline::set_device_id(::google::protobuf::int32 value) {
+  
+  device_id_ = value;
+  // @@protoc_insertion_point(field_set:OVRTimeline.device_id)
+}
+
+// repeated .OVRSample samples = 2;
 inline int OVRTimeline::samples_size() const {
   return samples_.size();
 }

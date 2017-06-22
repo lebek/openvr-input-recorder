@@ -71,6 +71,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] = {
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OVRDevice, id_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OVRDevice, device_class_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OVRDevice, controller_role_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OVRDevice, properties_),
@@ -90,14 +91,15 @@ const ::google::protobuf::uint32 TableStruct::offsets[] = {
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OVRTimeline, device_id_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OVRTimeline, samples_),
 };
 
 static const ::google::protobuf::internal::MigrationSchema schemas[] = {
   { 0, -1, sizeof(OVRDeviceProperty)},
   { 13, -1, sizeof(OVRDevice)},
-  { 21, -1, sizeof(OVRSample)},
-  { 32, -1, sizeof(OVRTimeline)},
+  { 22, -1, sizeof(OVRSample)},
+  { 33, -1, sizeof(OVRTimeline)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -169,18 +171,18 @@ void AddDescriptorsImpl() {
       "loat_value\030\005 \001(\002\022\024\n\014string_value\030\006 \001(\t\022\026"
       "\n\016matrix34_value\030\007 \003(\002\"L\n\004Type\022\t\n\005Int32\020"
       "\000\022\n\n\006Uint64\020\001\022\010\n\004Bool\020\002\022\t\n\005Float\020\003\022\n\n\006St"
-      "ring\020\004\022\014\n\010Matrix34\020\005\"b\n\tOVRDevice\022\024\n\014dev"
-      "ice_class\030\001 \001(\005\022\027\n\017controller_role\030\002 \001(\005"
-      "\022&\n\nproperties\030\003 \003(\0132\022.OVRDeviceProperty"
-      "\"\227\001\n\tOVRSample\022(\n\004time\030\001 \001(\0132\032.google.pr"
-      "otobuf.Timestamp\022\020\n\010position\030\002 \003(\002\022\020\n\010ro"
-      "tation\030\003 \003(\002\022\014\n\004axis\030\004 \003(\002\022\026\n\016button_pre"
-      "ssed\030\005 \001(\004\022\026\n\016button_touched\030\006 \001(\004\"*\n\013OV"
-      "RTimeline\022\033\n\007samples\030\001 \003(\0132\n.OVRSampleb\006"
-      "proto3"
+      "ring\020\004\022\014\n\010Matrix34\020\005\"n\n\tOVRDevice\022\n\n\002id\030"
+      "\001 \001(\005\022\024\n\014device_class\030\002 \001(\005\022\027\n\017controlle"
+      "r_role\030\003 \001(\005\022&\n\nproperties\030\004 \003(\0132\022.OVRDe"
+      "viceProperty\"\227\001\n\tOVRSample\022(\n\004time\030\001 \001(\013"
+      "2\032.google.protobuf.Timestamp\022\020\n\010position"
+      "\030\002 \003(\002\022\020\n\010rotation\030\003 \003(\002\022\014\n\004axis\030\004 \003(\002\022\026"
+      "\n\016button_pressed\030\005 \001(\004\022\026\n\016button_touched"
+      "\030\006 \001(\004\"=\n\013OVRTimeline\022\021\n\tdevice_id\030\001 \001(\005"
+      "\022\033\n\007samples\030\002 \003(\0132\n.OVRSampleb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 646);
+      descriptor, 677);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ovr_device.proto", &protobuf_RegisterTypes);
   ::google::protobuf::protobuf_google_2fprotobuf_2ftimestamp_2eproto::AddDescriptors();
@@ -917,6 +919,7 @@ OVRDeviceProperty::mutable_matrix34_value() {
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int OVRDevice::kIdFieldNumber;
 const int OVRDevice::kDeviceClassFieldNumber;
 const int OVRDevice::kControllerRoleFieldNumber;
 const int OVRDevice::kPropertiesFieldNumber;
@@ -936,15 +939,15 @@ OVRDevice::OVRDevice(const OVRDevice& from)
       properties_(from.properties_),
       _cached_size_(0) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::memcpy(&device_class_, &from.device_class_,
+  ::memcpy(&id_, &from.id_,
     reinterpret_cast<char*>(&controller_role_) -
-    reinterpret_cast<char*>(&device_class_) + sizeof(controller_role_));
+    reinterpret_cast<char*>(&id_) + sizeof(controller_role_));
   // @@protoc_insertion_point(copy_constructor:OVRDevice)
 }
 
 void OVRDevice::SharedCtor() {
-  ::memset(&device_class_, 0, reinterpret_cast<char*>(&controller_role_) -
-    reinterpret_cast<char*>(&device_class_) + sizeof(controller_role_));
+  ::memset(&id_, 0, reinterpret_cast<char*>(&controller_role_) -
+    reinterpret_cast<char*>(&id_) + sizeof(controller_role_));
   _cached_size_ = 0;
 }
 
@@ -982,8 +985,8 @@ OVRDevice* OVRDevice::New(::google::protobuf::Arena* arena) const {
 void OVRDevice::Clear() {
 // @@protoc_insertion_point(message_clear_start:OVRDevice)
   properties_.Clear();
-  ::memset(&device_class_, 0, reinterpret_cast<char*>(&controller_role_) -
-    reinterpret_cast<char*>(&device_class_) + sizeof(controller_role_));
+  ::memset(&id_, 0, reinterpret_cast<char*>(&controller_role_) -
+    reinterpret_cast<char*>(&id_) + sizeof(controller_role_));
 }
 
 bool OVRDevice::MergePartialFromCodedStream(
@@ -996,10 +999,24 @@ bool OVRDevice::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // int32 device_class = 1;
+      // int32 id = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(8u)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &id_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // int32 device_class = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(16u)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
@@ -1010,10 +1027,10 @@ bool OVRDevice::MergePartialFromCodedStream(
         break;
       }
 
-      // int32 controller_role = 2;
-      case 2: {
+      // int32 controller_role = 3;
+      case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(16u)) {
+            static_cast< ::google::protobuf::uint8>(24u)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
@@ -1024,10 +1041,10 @@ bool OVRDevice::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .OVRDeviceProperty properties = 3;
-      case 3: {
+      // repeated .OVRDeviceProperty properties = 4;
+      case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(26u)) {
+            static_cast< ::google::protobuf::uint8>(34u)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_properties()));
         } else {
@@ -1063,20 +1080,25 @@ void OVRDevice::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // int32 device_class = 1;
+  // int32 id = 1;
+  if (this->id() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->id(), output);
+  }
+
+  // int32 device_class = 2;
   if (this->device_class() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->device_class(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->device_class(), output);
   }
 
-  // int32 controller_role = 2;
+  // int32 controller_role = 3;
   if (this->controller_role() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->controller_role(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->controller_role(), output);
   }
 
-  // repeated .OVRDeviceProperty properties = 3;
+  // repeated .OVRDeviceProperty properties = 4;
   for (unsigned int i = 0, n = this->properties_size(); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->properties(i), output);
+      4, this->properties(i), output);
   }
 
   // @@protoc_insertion_point(serialize_end:OVRDevice)
@@ -1088,21 +1110,26 @@ void OVRDevice::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // int32 device_class = 1;
+  // int32 id = 1;
+  if (this->id() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->id(), target);
+  }
+
+  // int32 device_class = 2;
   if (this->device_class() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->device_class(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->device_class(), target);
   }
 
-  // int32 controller_role = 2;
+  // int32 controller_role = 3;
   if (this->controller_role() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->controller_role(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->controller_role(), target);
   }
 
-  // repeated .OVRDeviceProperty properties = 3;
+  // repeated .OVRDeviceProperty properties = 4;
   for (unsigned int i = 0, n = this->properties_size(); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageNoVirtualToArray(
-        3, this->properties(i), deterministic, target);
+        4, this->properties(i), deterministic, target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:OVRDevice)
@@ -1113,7 +1140,7 @@ size_t OVRDevice::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:OVRDevice)
   size_t total_size = 0;
 
-  // repeated .OVRDeviceProperty properties = 3;
+  // repeated .OVRDeviceProperty properties = 4;
   {
     unsigned int count = this->properties_size();
     total_size += 1UL * count;
@@ -1124,14 +1151,21 @@ size_t OVRDevice::ByteSizeLong() const {
     }
   }
 
-  // int32 device_class = 1;
+  // int32 id = 1;
+  if (this->id() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->id());
+  }
+
+  // int32 device_class = 2;
   if (this->device_class() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->device_class());
   }
 
-  // int32 controller_role = 2;
+  // int32 controller_role = 3;
   if (this->controller_role() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
@@ -1168,6 +1202,9 @@ void OVRDevice::MergeFrom(const OVRDevice& from) {
   (void) cached_has_bits;
 
   properties_.MergeFrom(from.properties_);
+  if (from.id() != 0) {
+    set_id(from.id());
+  }
   if (from.device_class() != 0) {
     set_device_class(from.device_class());
   }
@@ -1200,6 +1237,7 @@ void OVRDevice::Swap(OVRDevice* other) {
 }
 void OVRDevice::InternalSwap(OVRDevice* other) {
   properties_.InternalSwap(&other->properties_);
+  std::swap(id_, other->id_);
   std::swap(device_class_, other->device_class_);
   std::swap(controller_role_, other->controller_role_);
   std::swap(_cached_size_, other->_cached_size_);
@@ -1213,7 +1251,21 @@ void OVRDevice::InternalSwap(OVRDevice* other) {
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
 // OVRDevice
 
-// int32 device_class = 1;
+// int32 id = 1;
+void OVRDevice::clear_id() {
+  id_ = 0;
+}
+::google::protobuf::int32 OVRDevice::id() const {
+  // @@protoc_insertion_point(field_get:OVRDevice.id)
+  return id_;
+}
+void OVRDevice::set_id(::google::protobuf::int32 value) {
+  
+  id_ = value;
+  // @@protoc_insertion_point(field_set:OVRDevice.id)
+}
+
+// int32 device_class = 2;
 void OVRDevice::clear_device_class() {
   device_class_ = 0;
 }
@@ -1227,7 +1279,7 @@ void OVRDevice::set_device_class(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:OVRDevice.device_class)
 }
 
-// int32 controller_role = 2;
+// int32 controller_role = 3;
 void OVRDevice::clear_controller_role() {
   controller_role_ = 0;
 }
@@ -1241,7 +1293,7 @@ void OVRDevice::set_controller_role(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:OVRDevice.controller_role)
 }
 
-// repeated .OVRDeviceProperty properties = 3;
+// repeated .OVRDeviceProperty properties = 4;
 int OVRDevice::properties_size() const {
   return properties_.size();
 }
@@ -1921,6 +1973,7 @@ void OVRSample::set_button_touched(::google::protobuf::uint64 value) {
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int OVRTimeline::kDeviceIdFieldNumber;
 const int OVRTimeline::kSamplesFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
@@ -1938,10 +1991,12 @@ OVRTimeline::OVRTimeline(const OVRTimeline& from)
       samples_(from.samples_),
       _cached_size_(0) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
+  device_id_ = from.device_id_;
   // @@protoc_insertion_point(copy_constructor:OVRTimeline)
 }
 
 void OVRTimeline::SharedCtor() {
+  device_id_ = 0;
   _cached_size_ = 0;
 }
 
@@ -1979,6 +2034,7 @@ OVRTimeline* OVRTimeline::New(::google::protobuf::Arena* arena) const {
 void OVRTimeline::Clear() {
 // @@protoc_insertion_point(message_clear_start:OVRTimeline)
   samples_.Clear();
+  device_id_ = 0;
 }
 
 bool OVRTimeline::MergePartialFromCodedStream(
@@ -1991,10 +2047,24 @@ bool OVRTimeline::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .OVRSample samples = 1;
+      // int32 device_id = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(10u)) {
+            static_cast< ::google::protobuf::uint8>(8u)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &device_id_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // repeated .OVRSample samples = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(18u)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_samples()));
         } else {
@@ -2030,10 +2100,15 @@ void OVRTimeline::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // repeated .OVRSample samples = 1;
+  // int32 device_id = 1;
+  if (this->device_id() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->device_id(), output);
+  }
+
+  // repeated .OVRSample samples = 2;
   for (unsigned int i = 0, n = this->samples_size(); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->samples(i), output);
+      2, this->samples(i), output);
   }
 
   // @@protoc_insertion_point(serialize_end:OVRTimeline)
@@ -2045,11 +2120,16 @@ void OVRTimeline::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // repeated .OVRSample samples = 1;
+  // int32 device_id = 1;
+  if (this->device_id() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->device_id(), target);
+  }
+
+  // repeated .OVRSample samples = 2;
   for (unsigned int i = 0, n = this->samples_size(); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageNoVirtualToArray(
-        1, this->samples(i), deterministic, target);
+        2, this->samples(i), deterministic, target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:OVRTimeline)
@@ -2060,7 +2140,7 @@ size_t OVRTimeline::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:OVRTimeline)
   size_t total_size = 0;
 
-  // repeated .OVRSample samples = 1;
+  // repeated .OVRSample samples = 2;
   {
     unsigned int count = this->samples_size();
     total_size += 1UL * count;
@@ -2069,6 +2149,13 @@ size_t OVRTimeline::ByteSizeLong() const {
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->samples(i));
     }
+  }
+
+  // int32 device_id = 1;
+  if (this->device_id() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->device_id());
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -2101,6 +2188,9 @@ void OVRTimeline::MergeFrom(const OVRTimeline& from) {
   (void) cached_has_bits;
 
   samples_.MergeFrom(from.samples_);
+  if (from.device_id() != 0) {
+    set_device_id(from.device_id());
+  }
 }
 
 void OVRTimeline::CopyFrom(const ::google::protobuf::Message& from) {
@@ -2127,6 +2217,7 @@ void OVRTimeline::Swap(OVRTimeline* other) {
 }
 void OVRTimeline::InternalSwap(OVRTimeline* other) {
   samples_.InternalSwap(&other->samples_);
+  std::swap(device_id_, other->device_id_);
   std::swap(_cached_size_, other->_cached_size_);
 }
 
@@ -2138,7 +2229,21 @@ void OVRTimeline::InternalSwap(OVRTimeline* other) {
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
 // OVRTimeline
 
-// repeated .OVRSample samples = 1;
+// int32 device_id = 1;
+void OVRTimeline::clear_device_id() {
+  device_id_ = 0;
+}
+::google::protobuf::int32 OVRTimeline::device_id() const {
+  // @@protoc_insertion_point(field_get:OVRTimeline.device_id)
+  return device_id_;
+}
+void OVRTimeline::set_device_id(::google::protobuf::int32 value) {
+  
+  device_id_ = value;
+  // @@protoc_insertion_point(field_set:OVRTimeline.device_id)
+}
+
+// repeated .OVRSample samples = 2;
 int OVRTimeline::samples_size() const {
   return samples_.size();
 }

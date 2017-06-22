@@ -49,23 +49,21 @@ SET(Protobuf_LIBRARY ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/protobuf/cmake/build
 SET(Protobuf_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/protobuf/src)
 SET(Protobuf_LIBRARY_DEBUG ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/protobuf/cmake/build/x64-Debug/Debug/libprotobufd.lib)
 
-INCLUDE(FindProtobuf)
 find_package(Protobuf REQUIRED)
 
-include_directories(
+file(GLOB_RECURSE openvr_input_recorder_sources "src/*.cc")
+MESSAGE( STATUS "LIB: " ${OPENVR_INCLUDE_DIR})
+add_executable(openvr-input-recorder ${openvr_input_recorder_sources} ${PROTO_HEADER} ${PROTO_SRC})
+target_include_directories(openvr-input-recorder SYSTEM PUBLIC
   src/
   ${OPENVR_INCLUDE_DIR}
-  ${Boost_INCLUDE_DIRS}
-  ${INPUT_EMULATOR_INCLUDE_DIR}
   ${PROTOBUF_INCLUDE_DIRS}
+  ${INPUT_EMULATOR_INCLUDE_DIR}
+  ${Boost_INCLUDE_DIRS}
 )
-
-file(GLOB_RECURSE openvr_input_recorder_sources "src/*.cc")
-MESSAGE( STATUS "PROJECT_BINARY_DIR: " ${INPUT_EMULATOR_LIBRARIES} )
-add_executable(openvr-input-recorder ${openvr_input_recorder_sources} ${PROTO_HEADER} ${PROTO_SRC})
 target_link_libraries(openvr-input-recorder 
-	debug ${OPENVR_LIBRARIES} ${INPUT_EMULATOR_LIBRARIES} ${Protobuf_LIBRARY_DEBUG} ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/OpenVR-InputEmulator/third-party/boost_1_63_0/lib64-msvc-14.0/libboost_date_time-vc140-mt-sgd-1_63.lib
-	optimized ${OPENVR_LIBRARIES} ${INPUT_EMULATOR_LIBRARIES} ${PROTOBUF_LIBRARY}
+	debug ${OPENVR_LIBRARIES} ${Protobuf_LIBRARY_DEBUG} ${INPUT_EMULATOR_LIBRARIES}  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/OpenVR-InputEmulator/third-party/boost_1_63_0/lib64-msvc-14.0/libboost_date_time-vc140-mt-sgd-1_63.lib
+	optimized ${OPENVR_LIBRARIES} ${PROTOBUF_LIBRARY} ${INPUT_EMULATOR_LIBRARIES}  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/OpenVR-InputEmulator/third-party/boost_1_63_0/lib64-msvc-14.0/libboost_date_time-vc140-mt-sgd-1_63.lib
 )
 
 add_custom_command(TARGET openvr-input-recorder POST_BUILD 

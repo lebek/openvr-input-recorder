@@ -1,7 +1,7 @@
 {
     // See https://go.microsoft.com//fwlink//?linkid=834763 for more information about this file.
     "configurations": [
-      {
+      /*{
         "name": "x86-Debug",
         "generator": "Visual Studio 15 2017",
         "configurationType": "Debug",
@@ -18,7 +18,7 @@
         "cmakeCommandArgs": "",
         "buildCommandArgs": "-m -v:minimal",
         "ctestCommandArgs": ""
-      },
+      },*/
       {
         "name": "x64-Debug",
         "generator": "Visual Studio 15 2017 Win64",
