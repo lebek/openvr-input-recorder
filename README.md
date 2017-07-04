@@ -10,12 +10,12 @@ Tired of pulling your headset on everytime you change code?
 ## Usage
 To record:
 ```
- ./openvr-input-recorder.exe record my_recording
+$ ./openvr-input-recorder.exe record my_recording
 ```
 
 To replay:
 ```
- ./openvr-input-recorder.exe replay my_recording
+$ ./openvr-input-recorder.exe replay my_recording
 ```
 
 ### For testing/debugging
