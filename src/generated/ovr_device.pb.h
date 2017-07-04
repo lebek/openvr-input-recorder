@@ -30,7 +30,6 @@
 #include <google/protobuf/extension_set.h>  // IWYU pragma: export
 #include <google/protobuf/generated_enum_reflection.h>
 #include <google/protobuf/unknown_field_set.h>
-#include <google/protobuf/timestamp.pb.h>
 // @@protoc_insertion_point(includes)
 class OVRDevice;
 class OVRDeviceDefaultTypeInternal;
@@ -44,13 +43,6 @@ extern OVRSampleDefaultTypeInternal _OVRSample_default_instance_;
 class OVRTimeline;
 class OVRTimelineDefaultTypeInternal;
 extern OVRTimelineDefaultTypeInternal _OVRTimeline_default_instance_;
-namespace google {
-namespace protobuf {
-class Timestamp;
-class TimestampDefaultTypeInternal;
-extern TimestampDefaultTypeInternal _Timestamp_default_instance_;
-}  // namespace protobuf
-}  // namespace google
 
 namespace protobuf_ovr_5fdevice_2eproto {
 // Internal implementation detail -- do not call these.
@@ -478,14 +470,11 @@ class OVRSample : public ::google::protobuf::Message /* @@protoc_insertion_point
   ::google::protobuf::RepeatedField< float >*
       mutable_axis();
 
-  // .google.protobuf.Timestamp time = 1;
-  bool has_time() const;
+  // uint64 time = 1;
   void clear_time();
   static const int kTimeFieldNumber = 1;
-  const ::google::protobuf::Timestamp& time() const;
-  ::google::protobuf::Timestamp* mutable_time();
-  ::google::protobuf::Timestamp* release_time();
-  void set_allocated_time(::google::protobuf::Timestamp* time);
+  ::google::protobuf::uint64 time() const;
+  void set_time(::google::protobuf::uint64 value);
 
   // uint64 button_pressed = 5;
   void clear_button_pressed();
@@ -509,7 +498,7 @@ class OVRSample : public ::google::protobuf::Message /* @@protoc_insertion_point
   mutable int _rotation_cached_byte_size_;
   ::google::protobuf::RepeatedField< float > axis_;
   mutable int _axis_cached_byte_size_;
-  ::google::protobuf::Timestamp* time_;
+  ::google::protobuf::uint64 time_;
   ::google::protobuf::uint64 button_pressed_;
   ::google::protobuf::uint64 button_touched_;
   mutable int _cached_size_;
@@ -863,48 +852,18 @@ OVRDevice::properties() const {
 
 // OVRSample
 
-// .google.protobuf.Timestamp time = 1;
-inline bool OVRSample::has_time() const {
-  return this != internal_default_instance() && time_ != NULL;
-}
+// uint64 time = 1;
 inline void OVRSample::clear_time() {
-  if (GetArenaNoVirtual() == NULL && time_ != NULL) delete time_;
-  time_ = NULL;
+  time_ = GOOGLE_ULONGLONG(0);
 }
-inline const ::google::protobuf::Timestamp& OVRSample::time() const {
+inline ::google::protobuf::uint64 OVRSample::time() const {
   // @@protoc_insertion_point(field_get:OVRSample.time)
-  return time_ != NULL ? *time_
-                         : *::google::protobuf::Timestamp::internal_default_instance();
-}
-inline ::google::protobuf::Timestamp* OVRSample::mutable_time() {
-  
-  if (time_ == NULL) {
-    time_ = new ::google::protobuf::Timestamp;
-  }
-  // @@protoc_insertion_point(field_mutable:OVRSample.time)
   return time_;
 }
-inline ::google::protobuf::Timestamp* OVRSample::release_time() {
-  // @@protoc_insertion_point(field_release:OVRSample.time)
+inline void OVRSample::set_time(::google::protobuf::uint64 value) {
   
-  ::google::protobuf::Timestamp* temp = time_;
-  time_ = NULL;
-  return temp;
-}
-inline void OVRSample::set_allocated_time(::google::protobuf::Timestamp* time) {
-  delete time_;
-  if (time != NULL && time->GetArena() != NULL) {
-    ::google::protobuf::Timestamp* new_time = new ::google::protobuf::Timestamp;
-    new_time->CopyFrom(*time);
-    time = new_time;
-  }
-  time_ = time;
-  if (time) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_set_allocated:OVRSample.time)
+  time_ = value;
+  // @@protoc_insertion_point(field_set:OVRSample.time)
 }
 
 // repeated float position = 2;

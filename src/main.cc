@@ -3,10 +3,15 @@
 #include <math.h>
 #include <windows.h>
 #include <fstream>
+#include <signal.h>
 #include "generated/ovr_device.pb.h"
 #include "generated/recording.pb.h"
 #include <openvr.h>
 #include <vrinputemulator.h>
+
+float lerp(float a, float b, float alpha) {
+	return (1 - alpha)*a + alpha*b;
+}
 
 vr::HmdQuaternion_t get_rotation(vr::HmdMatrix34_t matrix) {
 	vr::HmdQuaternion_t q;
@@ -48,6 +53,18 @@ void record(int argc, char *argv[]) {
 	for (int i = 0; i < vr::k_unMaxTrackedDeviceCount; ++i) {
 		auto deviceClass = vr::VRSystem()->GetTrackedDeviceClass(i);
 		if (deviceClass == vr::TrackedDeviceClass_Invalid) continue;
+
+		/* Ignore virtual devices */
+		std::string prefix = "virtual-";
+		char buffer[1024] = { '\0' };
+		vr::ETrackedPropertyError error;
+		vr::VRSystem()->GetStringTrackedDeviceProperty(i, (vr::ETrackedDeviceProperty)1002, buffer, 1024, &error);
+		if (error != vr::TrackedProp_Success || ((std::string)buffer).compare(0, prefix.length(), prefix) == 0) {
+			std::cout << "Skipping device: " << i << std::endl;
+			continue;
+		}
+
+		std::cout << "Serial: " << buffer << std::endl;
 
 		auto device = recording.add_devices();
 		device->set_id(i);
@@ -128,14 +145,16 @@ void record(int argc, char *argv[]) {
 	}
 	auto devices = recording.devices();
 
+	std::cout << "Press S to stop recording (max 120 seconds)" << std::endl;
+
 	/**** Record ****/
 	auto startTime = std::chrono::system_clock::now();
 	vr::TrackedDevicePose_t m_rTrackedDevicePose[vr::k_unMaxTrackedDeviceCount];
 	while (1) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 		auto now = std::chrono::system_clock::now();
-		double timeMillis = (double)std::chrono::duration_cast <std::chrono::milliseconds>(now - startTime).count();
-		if (timeMillis > 10 * 1000) break;
+		auto timeMillis = std::chrono::duration_cast <std::chrono::milliseconds>(now - startTime).count();
+		if (GetAsyncKeyState('S') & 0x8000 || timeMillis > 120 * 1000) break;
 
 		std::map<int, OVRTimeline *>::iterator it;
 		for (it = device_to_timeline.begin(); it != device_to_timeline.end(); ++it) {
@@ -145,6 +164,7 @@ void record(int argc, char *argv[]) {
 			vr::VRSystem()->GetDeviceToAbsoluteTrackingPose(vr::TrackingUniverseRawAndUncalibrated, 0, m_rTrackedDevicePose, vr::k_unMaxTrackedDeviceCount);
 
 			auto sample = timeline->add_samples();
+			sample->set_time(timeMillis);
 			auto position = get_position(m_rTrackedDevicePose[it->first].mDeviceToAbsoluteTracking);
 			auto quaternion = get_rotation(m_rTrackedDevicePose[it->first].mDeviceToAbsoluteTracking);
 
@@ -177,6 +197,8 @@ void record(int argc, char *argv[]) {
 		}
 	}
 
+	inputEmulator.disconnect();
+
 	std::fstream output(argv[2], std::ios::out | std::ios::trunc | std::ios::binary);
 	if (!recording.SerializeToOstream(&output)) {
 		throw std::runtime_error("Error: Failed to write recording.");
@@ -207,6 +229,29 @@ int get_connected_device(std::string serial_number) {
 	}
 
 	return -1;
+}
+
+/* Get or create a virtual device for the given serial, returns the virtual id */
+int get_virtual_device(vrinputemulator::VRInputEmulator& inputEmulator, std::string serial) {
+	for (int i = 0; i < (int)inputEmulator.getVirtualDeviceCount(); i++) {
+		auto info = inputEmulator.getVirtualDeviceInfo(i);
+		if (info.deviceSerial == serial) return info.virtualDeviceId;
+	}
+
+	return inputEmulator.addVirtualDevice(vrinputemulator::VirtualDeviceType::TrackedController, serial, true);
+}
+
+int get_interval(double t, OVRTimeline& timeline) {
+	if (t < timeline.samples(0).time()) return 0;
+
+	for (int i = 0; i < timeline.samples().size() - 1; i++) {
+		auto sample = timeline.samples(i);
+		if (sample.time() > t) {
+			return i - 1;
+		}
+	}
+
+	return timeline.samples().size() - 2;
 }
 
 void replay(int argc, char *argv[]) {
@@ -252,15 +297,15 @@ void replay(int argc, char *argv[]) {
 
 		std::cout << "Found " << serial << " @ " << ovr_id << std::endl;
 
-		// setup virtual
 		char buffer[256];
 		sprintf_s(buffer, sizeof(buffer), "virtual-%s", serial.c_str());
+		auto virtual_id = get_virtual_device(inputEmulator, buffer);
 
-		// need to check if virtual device with this serial already exists
-		auto virtual_id = inputEmulator.addVirtualDevice(vrinputemulator::VirtualDeviceType::TrackedController, buffer, true);
-		
 		auto properties = it->properties();
 		for (auto it2 = properties.begin(); it2 != properties.end(); ++it2) {
+			/* Skip serial */
+			if (it2->identifier() == 1002) continue;
+
 			if (it2->type() == OVRDeviceProperty_Type::OVRDeviceProperty_Type_String) {
 				inputEmulator.setVirtualDeviceProperty(virtual_id, (vr::ETrackedDeviceProperty)it2->identifier(), it2->string_value());
 			}
@@ -302,41 +347,81 @@ void replay(int argc, char *argv[]) {
 		device_to_virtual.insert(std::pair<int, int>(it->id(), virtual_id));
 	}
 
-	/* Replay  */
-	int t = 0;
-	auto timelines = recording.timeline();
-	while (1) {
-		std::this_thread::sleep_for(std::chrono::milliseconds(5));
-		std::cout << t << std::endl;
-		for (auto it = timelines.begin(); it != timelines.end(); ++it) {
-			if (t >= it->samples_size()) goto theEnd;
+	std::cout << "Press S to stop playback" << std::endl;
 
+	/* Replay  */
+	auto timelines = recording.timeline();
+	auto startTime = std::chrono::system_clock::now();
+	auto last = std::chrono::system_clock::now();
+	while (1) {
+		if (GetAsyncKeyState('S') & 0x8000) break;
+		auto now = std::chrono::system_clock::now();
+		auto deltaMillis = std::chrono::duration_cast <std::chrono::milliseconds>(now - last).count();
+		auto t = std::chrono::duration_cast <std::chrono::milliseconds>(now - startTime).count();
+		//std::cout << "Delta millis: " << deltaMillis << std::endl;
+		last = now;
+
+		/*if (deltaMillis < 5) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(5 - (int)deltaMillis));
+		}*/
+
+		//std::cout << t << std::endl;
+		for (auto it = timelines.begin(); it != timelines.end(); ++it) {
 			auto it_virtual_id = device_to_virtual.find(it->device_id());
 			if (it_virtual_id == device_to_virtual.end()) continue;
 			auto virtual_id = it_virtual_id->second;
 			
 			// pop sample
-			auto sample = it->samples(t);
-			std::cout << sample.position(0) << sample.position(1) << sample.position(2) << std::endl;
+			int sample_idx = get_interval(t, *it);
+			if (sample_idx == it->samples_size() - 2) goto theEnd;
+
+			auto sample = it->samples(sample_idx);
+			auto sample2 = it->samples(sample_idx+1);
+			float alpha = (float)(t - sample.time()) / (float)(sample2.time() - sample.time());
+			//std::cout << sample.time()  << " " << alpha << " " << sample2.time() << std::endl;
+			//std::cout << sample.position(0) << sample.position(1) << sample.position(2) << std::endl;
 			auto pose = inputEmulator.getVirtualDevicePose(virtual_id);
-			pose.vecPosition[0] = sample.position(0);
-			pose.vecPosition[1] = sample.position(1);
-			pose.vecPosition[2] = sample.position(2);
-			pose.qRotation.w = sample.rotation(0);
-			pose.qRotation.x = sample.rotation(1);
-			pose.qRotation.y = sample.rotation(2);
-			pose.qRotation.z = sample.rotation(3);
+
+			pose.vecPosition[0] = lerp(sample.position(0), sample2.position(0), alpha);
+			pose.vecPosition[1] = lerp(sample.position(1), sample2.position(1), alpha);
+			pose.vecPosition[2] = lerp(sample.position(2), sample2.position(2), alpha);
+			pose.qRotation.w = lerp(sample.rotation(0), sample2.rotation(0), alpha);
+			pose.qRotation.x = lerp(sample.rotation(1), sample2.rotation(1), alpha);
+			pose.qRotation.y = lerp(sample.rotation(2), sample2.rotation(2), alpha);
+			pose.qRotation.z = lerp(sample.rotation(3), sample2.rotation(3), alpha);
 			pose.poseIsValid = true;
 			pose.deviceIsConnected = true;
 			pose.result = vr::TrackingResult_Running_OK;
 			inputEmulator.setVirtualDevicePose(virtual_id, pose);
+
+			if (sample.axis_size() > 0) {
+				auto state = inputEmulator.getVirtualControllerState(virtual_id);
+				state.ulButtonPressed = sample.button_pressed();
+				state.ulButtonTouched = sample.button_touched();
+				state.rAxis[0].x = sample.axis(0);
+				state.rAxis[0].y = sample.axis(1);
+				state.rAxis[1].x = sample.axis(2);
+				state.rAxis[1].y = sample.axis(3);
+				state.rAxis[2].x = sample.axis(4);
+				state.rAxis[2].y = sample.axis(5);
+				state.rAxis[3].x = sample.axis(6);
+				state.rAxis[3].y = sample.axis(7);
+				state.rAxis[4].x = sample.axis(8);
+				state.rAxis[4].y = sample.axis(9);
+				inputEmulator.setVirtualControllerState(virtual_id, state);
+			}
 		}
-
-
-
-		t++;
 	}
 theEnd:
+
+	for (auto it = device_to_virtual.begin(); it != device_to_virtual.end(); ++it) {
+		inputEmulator.setDeviceNormalMode(it->first);
+		auto info = inputEmulator.getVirtualDeviceInfo(it->second);
+		inputEmulator.setDeviceFakeDisconnectedMode(info.openvrDeviceId);
+	}
+
+	inputEmulator.disconnect();
+	
 	return;
 }
 

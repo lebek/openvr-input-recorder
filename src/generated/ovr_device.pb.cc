@@ -147,13 +147,10 @@ void TableStruct::InitDefaultsImpl() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::internal::InitProtobufDefaults();
-  ::google::protobuf::protobuf_google_2fprotobuf_2ftimestamp_2eproto::InitDefaults();
   _OVRDeviceProperty_default_instance_.DefaultConstruct();
   _OVRDevice_default_instance_.DefaultConstruct();
   _OVRSample_default_instance_.DefaultConstruct();
   _OVRTimeline_default_instance_.DefaultConstruct();
-  _OVRSample_default_instance_.get_mutable()->time_ = const_cast< ::google::protobuf::Timestamp*>(
-      ::google::protobuf::Timestamp::internal_default_instance());
 }
 
 void InitDefaults() {
@@ -163,29 +160,27 @@ void InitDefaults() {
 void AddDescriptorsImpl() {
   InitDefaults();
   static const char descriptor[] = {
-      "\n\020ovr_device.proto\032\037google/protobuf/time"
-      "stamp.proto\"\236\002\n\021OVRDeviceProperty\022\022\n\nide"
-      "ntifier\030\010 \001(\005\022%\n\004type\030\001 \001(\0162\027.OVRDeviceP"
-      "roperty.Type\022\023\n\013int32_value\030\002 \001(\005\022\024\n\014uin"
-      "t64_value\030\003 \001(\004\022\022\n\nbool_value\030\004 \001(\010\022\023\n\013f"
-      "loat_value\030\005 \001(\002\022\024\n\014string_value\030\006 \001(\t\022\026"
-      "\n\016matrix34_value\030\007 \003(\002\"L\n\004Type\022\t\n\005Int32\020"
-      "\000\022\n\n\006Uint64\020\001\022\010\n\004Bool\020\002\022\t\n\005Float\020\003\022\n\n\006St"
-      "ring\020\004\022\014\n\010Matrix34\020\005\"n\n\tOVRDevice\022\n\n\002id\030"
-      "\001 \001(\005\022\024\n\014device_class\030\002 \001(\005\022\027\n\017controlle"
-      "r_role\030\003 \001(\005\022&\n\nproperties\030\004 \003(\0132\022.OVRDe"
-      "viceProperty\"\227\001\n\tOVRSample\022(\n\004time\030\001 \001(\013"
-      "2\032.google.protobuf.Timestamp\022\020\n\010position"
-      "\030\002 \003(\002\022\020\n\010rotation\030\003 \003(\002\022\014\n\004axis\030\004 \003(\002\022\026"
-      "\n\016button_pressed\030\005 \001(\004\022\026\n\016button_touched"
-      "\030\006 \001(\004\"=\n\013OVRTimeline\022\021\n\tdevice_id\030\001 \001(\005"
-      "\022\033\n\007samples\030\002 \003(\0132\n.OVRSampleb\006proto3"
+      "\n\020ovr_device.proto\"\236\002\n\021OVRDeviceProperty"
+      "\022\022\n\nidentifier\030\010 \001(\005\022%\n\004type\030\001 \001(\0162\027.OVR"
+      "DeviceProperty.Type\022\023\n\013int32_value\030\002 \001(\005"
+      "\022\024\n\014uint64_value\030\003 \001(\004\022\022\n\nbool_value\030\004 \001"
+      "(\010\022\023\n\013float_value\030\005 \001(\002\022\024\n\014string_value\030"
+      "\006 \001(\t\022\026\n\016matrix34_value\030\007 \003(\002\"L\n\004Type\022\t\n"
+      "\005Int32\020\000\022\n\n\006Uint64\020\001\022\010\n\004Bool\020\002\022\t\n\005Float\020"
+      "\003\022\n\n\006String\020\004\022\014\n\010Matrix34\020\005\"n\n\tOVRDevice"
+      "\022\n\n\002id\030\001 \001(\005\022\024\n\014device_class\030\002 \001(\005\022\027\n\017co"
+      "ntroller_role\030\003 \001(\005\022&\n\nproperties\030\004 \003(\0132"
+      "\022.OVRDeviceProperty\"{\n\tOVRSample\022\014\n\004time"
+      "\030\001 \001(\004\022\020\n\010position\030\002 \003(\002\022\020\n\010rotation\030\003 \003"
+      "(\002\022\014\n\004axis\030\004 \003(\002\022\026\n\016button_pressed\030\005 \001(\004"
+      "\022\026\n\016button_touched\030\006 \001(\004\"=\n\013OVRTimeline\022"
+      "\021\n\tdevice_id\030\001 \001(\005\022\033\n\007samples\030\002 \003(\0132\n.OV"
+      "RSampleb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 677);
+      descriptor, 615);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ovr_device.proto", &protobuf_RegisterTypes);
-  ::google::protobuf::protobuf_google_2fprotobuf_2ftimestamp_2eproto::AddDescriptors();
   ::google::protobuf::internal::OnShutdown(&TableStruct::Shutdown);
 }
 
@@ -1352,14 +1347,9 @@ OVRSample::OVRSample(const OVRSample& from)
       axis_(from.axis_),
       _cached_size_(0) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  if (from.has_time()) {
-    time_ = new ::google::protobuf::Timestamp(*from.time_);
-  } else {
-    time_ = NULL;
-  }
-  ::memcpy(&button_pressed_, &from.button_pressed_,
+  ::memcpy(&time_, &from.time_,
     reinterpret_cast<char*>(&button_touched_) -
-    reinterpret_cast<char*>(&button_pressed_) + sizeof(button_touched_));
+    reinterpret_cast<char*>(&time_) + sizeof(button_touched_));
   // @@protoc_insertion_point(copy_constructor:OVRSample)
 }
 
@@ -1375,9 +1365,6 @@ OVRSample::~OVRSample() {
 }
 
 void OVRSample::SharedDtor() {
-  if (this != internal_default_instance()) {
-    delete time_;
-  }
 }
 
 void OVRSample::SetCachedSize(int size) const {
@@ -1408,12 +1395,8 @@ void OVRSample::Clear() {
   position_.Clear();
   rotation_.Clear();
   axis_.Clear();
-  if (GetArenaNoVirtual() == NULL && time_ != NULL) {
-    delete time_;
-  }
-  time_ = NULL;
-  ::memset(&button_pressed_, 0, reinterpret_cast<char*>(&button_touched_) -
-    reinterpret_cast<char*>(&button_pressed_) + sizeof(button_touched_));
+  ::memset(&time_, 0, reinterpret_cast<char*>(&button_touched_) -
+    reinterpret_cast<char*>(&time_) + sizeof(button_touched_));
 }
 
 bool OVRSample::MergePartialFromCodedStream(
@@ -1426,12 +1409,14 @@ bool OVRSample::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // .google.protobuf.Timestamp time = 1;
+      // uint64 time = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(10u)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_time()));
+            static_cast< ::google::protobuf::uint8>(8u)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
+                 input, &time_)));
         } else {
           goto handle_unusual;
         }
@@ -1547,10 +1532,9 @@ void OVRSample::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // .google.protobuf.Timestamp time = 1;
-  if (this->has_time()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, *this->time_, output);
+  // uint64 time = 1;
+  if (this->time() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(1, this->time(), output);
   }
 
   // repeated float position = 2;
@@ -1596,11 +1580,9 @@ void OVRSample::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // .google.protobuf.Timestamp time = 1;
-  if (this->has_time()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      InternalWriteMessageNoVirtualToArray(
-        1, *this->time_, deterministic, target);
+  // uint64 time = 1;
+  if (this->time() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->time(), target);
   }
 
   // repeated float position = 2;
@@ -1702,11 +1684,11 @@ size_t OVRSample::ByteSizeLong() const {
     total_size += data_size;
   }
 
-  // .google.protobuf.Timestamp time = 1;
-  if (this->has_time()) {
+  // uint64 time = 1;
+  if (this->time() != 0) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        *this->time_);
+      ::google::protobuf::internal::WireFormatLite::UInt64Size(
+        this->time());
   }
 
   // uint64 button_pressed = 5;
@@ -1755,8 +1737,8 @@ void OVRSample::MergeFrom(const OVRSample& from) {
   position_.MergeFrom(from.position_);
   rotation_.MergeFrom(from.rotation_);
   axis_.MergeFrom(from.axis_);
-  if (from.has_time()) {
-    mutable_time()->::google::protobuf::Timestamp::MergeFrom(from.time());
+  if (from.time() != 0) {
+    set_time(from.time());
   }
   if (from.button_pressed() != 0) {
     set_button_pressed(from.button_pressed());
@@ -1806,48 +1788,18 @@ void OVRSample::InternalSwap(OVRSample* other) {
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
 // OVRSample
 
-// .google.protobuf.Timestamp time = 1;
-bool OVRSample::has_time() const {
-  return this != internal_default_instance() && time_ != NULL;
-}
+// uint64 time = 1;
 void OVRSample::clear_time() {
-  if (GetArenaNoVirtual() == NULL && time_ != NULL) delete time_;
-  time_ = NULL;
+  time_ = GOOGLE_ULONGLONG(0);
 }
-const ::google::protobuf::Timestamp& OVRSample::time() const {
+::google::protobuf::uint64 OVRSample::time() const {
   // @@protoc_insertion_point(field_get:OVRSample.time)
-  return time_ != NULL ? *time_
-                         : *::google::protobuf::Timestamp::internal_default_instance();
-}
-::google::protobuf::Timestamp* OVRSample::mutable_time() {
-  
-  if (time_ == NULL) {
-    time_ = new ::google::protobuf::Timestamp;
-  }
-  // @@protoc_insertion_point(field_mutable:OVRSample.time)
   return time_;
 }
-::google::protobuf::Timestamp* OVRSample::release_time() {
-  // @@protoc_insertion_point(field_release:OVRSample.time)
+void OVRSample::set_time(::google::protobuf::uint64 value) {
   
-  ::google::protobuf::Timestamp* temp = time_;
-  time_ = NULL;
-  return temp;
-}
-void OVRSample::set_allocated_time(::google::protobuf::Timestamp* time) {
-  delete time_;
-  if (time != NULL && time->GetArena() != NULL) {
-    ::google::protobuf::Timestamp* new_time = new ::google::protobuf::Timestamp;
-    new_time->CopyFrom(*time);
-    time = new_time;
-  }
-  time_ = time;
-  if (time) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_set_allocated:OVRSample.time)
+  time_ = value;
+  // @@protoc_insertion_point(field_set:OVRSample.time)
 }
 
 // repeated float position = 2;

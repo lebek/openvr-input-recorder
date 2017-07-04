@@ -1,7 +1,5 @@
 syntax = "proto3";
 
-import "google/protobuf/timestamp.proto";
-
 message OVRDeviceProperty {
 	int32 identifier = 8;
 		
@@ -30,8 +28,8 @@ message OVRDevice {
 /* Need a way to tie samples/timelines to devices */
 
 message OVRSample {
-	/* Do we really want a timestamp here or ms from start? */
-	google.protobuf.Timestamp time = 1;
+	/* Milliseconds from start */
+	uint64 time = 1;
 
 	repeated float position = 2;
 	repeated float rotation = 3;
