@@ -14,23 +14,25 @@ Download the latest binary from the [release section](https://github.com/lebek/o
 ## Usage
 To record:
 ```
-$ "C:\Program Files\OpenVR-Input-Recorder\openvr-input-recorder.exe" record my_recording
+$ openvr-input-recorder.exe record my_recording
 ```
 
 To replay:
 ```
-$ "C:\Program Files\OpenVR-Input-Recorder\openvr-input-recorder.exe" replay my_recording
+$ openvr-input-recorder.exe replay my_recording
 ```
 
 To replay at 2x speed:
 ```
-$ "C:\Program Files\OpenVR-Input-Recorder\openvr-input-recorder.exe" replay my_recording 2
+$ openvr-input-recorder.exe replay my_recording 2
 ```
 
 To loop at 2x speed:
 ```
-$ "C:\Program Files\OpenVR-Input-Recorder\openvr-input-recorder.exe" loop my_recording 2
+$ openvr-input-recorder.exe loop my_recording 2
 ```
+
+By default, `openvr-input-recorder.exe` will be installed at `C:\Program Files\OpenVR-Input-Recorder\openvr-input-recorder.exe`.
 
 ## Tips
 
