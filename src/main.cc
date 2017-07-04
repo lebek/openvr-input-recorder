@@ -265,6 +265,9 @@ void replay(int argc, char *argv[]) {
 		throw std::runtime_error("Error: Failed to parse recording.");
 	}
 
+	int speed = 1;
+	if (argc > 3) speed = atoi(argv[3]);
+
 	vr::HmdError err;
 	vr::IVRSystem *p = vr::VR_Init(&err, vr::VRApplication_Background);
 	if (err != vr::HmdError::VRInitError_None) {
@@ -357,7 +360,7 @@ void replay(int argc, char *argv[]) {
 		if (GetAsyncKeyState('S') & 0x8000) break;
 		auto now = std::chrono::system_clock::now();
 		auto deltaMillis = std::chrono::duration_cast <std::chrono::milliseconds>(now - last).count();
-		auto t = std::chrono::duration_cast <std::chrono::milliseconds>(now - startTime).count();
+		auto t = std::chrono::duration_cast <std::chrono::milliseconds>(now - startTime).count() * speed;
 		//std::cout << "Delta millis: " << deltaMillis << std::endl;
 		last = now;
 
@@ -372,16 +375,16 @@ void replay(int argc, char *argv[]) {
 			auto virtual_id = it_virtual_id->second;
 			
 			// pop sample
+			
 			int sample_idx = get_interval(t, *it);
 			if (sample_idx == it->samples_size() - 2) goto theEnd;
-
+			//auto a = std::chrono::system_clock::now();
 			auto sample = it->samples(sample_idx);
 			auto sample2 = it->samples(sample_idx+1);
 			float alpha = (float)(t - sample.time()) / (float)(sample2.time() - sample.time());
 			//std::cout << sample.time()  << " " << alpha << " " << sample2.time() << std::endl;
 			//std::cout << sample.position(0) << sample.position(1) << sample.position(2) << std::endl;
 			auto pose = inputEmulator.getVirtualDevicePose(virtual_id);
-
 			pose.vecPosition[0] = lerp(sample.position(0), sample2.position(0), alpha);
 			pose.vecPosition[1] = lerp(sample.position(1), sample2.position(1), alpha);
 			pose.vecPosition[2] = lerp(sample.position(2), sample2.position(2), alpha);
@@ -392,10 +395,10 @@ void replay(int argc, char *argv[]) {
 			pose.poseIsValid = true;
 			pose.deviceIsConnected = true;
 			pose.result = vr::TrackingResult_Running_OK;
-			inputEmulator.setVirtualDevicePose(virtual_id, pose);
-
+			inputEmulator.setVirtualDevicePose(virtual_id, pose, false);
 			if (sample.axis_size() > 0) {
-				auto state = inputEmulator.getVirtualControllerState(virtual_id);
+				//auto state = inputEmulator.getVirtualControllerState(virtual_id);
+				vr::VRControllerState_t state;
 				state.ulButtonPressed = sample.button_pressed();
 				state.ulButtonTouched = sample.button_touched();
 				state.rAxis[0].x = sample.axis(0);
@@ -408,8 +411,10 @@ void replay(int argc, char *argv[]) {
 				state.rAxis[3].y = sample.axis(7);
 				state.rAxis[4].x = sample.axis(8);
 				state.rAxis[4].y = sample.axis(9);
-				inputEmulator.setVirtualControllerState(virtual_id, state);
+				inputEmulator.setVirtualControllerState(virtual_id, state, false);
 			}
+			//auto b = std::chrono::system_clock::now();
+			//std::cout << std::chrono::duration_cast <std::chrono::milliseconds>(b - a).count() << std::endl;
 		}
 	}
 theEnd:
