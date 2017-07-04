@@ -8,6 +8,7 @@
 #include "generated/recording.pb.h"
 #include <openvr.h>
 #include <vrinputemulator.h>
+#include "args.h"
 
 float lerp(float a, float b, float alpha) {
 	return (1 - alpha)*a + alpha*b;
@@ -451,6 +452,40 @@ int main (int argc, char *argv[])
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
 
 	int retval = 0;
+
+	args::ArgumentParser parser("Record and playback OpenVR position/input data.", "");
+	args::HelpFlag help(parser, "help", "Display this help menu", { 'h', "help" });
+	args::Positional<std::string> command(parser, "command", "Command");
+
+	try
+	{
+		parser.ParseCLI(argc, argv);
+		if (command && args::get(command).compare("record") != 0) {
+
+		}
+	}
+	catch (args::Help)
+	{
+		std::cout << parser;
+		return 0;
+	}
+	catch (args::ParseError e)
+	{
+		std::cerr << e.what() << std::endl;
+		std::cerr << parser;
+		return 1;
+	}
+	catch (args::ValidationError e)
+	{
+		std::cerr << e.what() << std::endl;
+		std::cerr << parser;
+		return 1;
+	}
+
+	//args::ValueFlag<int> speed(parser, "speed", "Playback speed", { "s", "speed" });
+	//args::Flag foo(parser, "loop", "Whether to loop playback", { "l", "loop" });
+	//args::Positional<std::string> path(parser, "command", "Path to a recording file");
+	//args::Positional<std::string> path(parser, "path", "Path to a recording file");
 
 	if (argc <= 1) {
 		std::cout << "Error: No Arguments given." << std::endl;
