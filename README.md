@@ -6,7 +6,7 @@ Tired of pulling your headset on everytime you change code?
 * Replay at 2x to shorten test cycles
 * Since tracking data is recorded/injected at the OpenVR driver level, it works with any game engine
 
-Demo: https://www.youtube.com/watch?v=GaCRjhzMMMg
+Demo: [https://www.youtube.com/watch?v=GaCRjhzMMMg](https://www.youtube.com/watch?v=GaCRjhzMMMg)
 
 ## Installation
 1. Download the latest (hotfix2) [OpenVR Input Emulator](https://github.com/matzman666/OpenVR-InputEmulator/releases) and run the installer (close SteamVR first)
