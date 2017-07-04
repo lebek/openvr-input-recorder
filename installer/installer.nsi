@@ -11,7 +11,7 @@
 
 	;Name and file
 	Name "OpenVR Input Recorder"
-	OutFile "openvr-input-recorder.exe"
+	OutFile "openvr-input-recorder-installer.exe"
 
 	;Default installation folder
 	InstallDir "$PROGRAMFILES64\OpenVR-Input-Recorder"
