@@ -28,6 +28,11 @@ To replay at 2x speed:
 $ ./openvr-input-recorder.exe replay my_recording 2
 ```
 
+To loop at 2x speed:
+```
+$ ./openvr-input-recorder.exe loop my_recording 2
+```
+
 ## Tips
 
 ### For testing/debugging
