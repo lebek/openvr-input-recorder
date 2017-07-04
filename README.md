@@ -1,5 +1,5 @@
 # OpenVR Input Recorder
-Tired of pulling your headset on everytime you change code? 
+Tired of pulling your headset on everytime you change code?
 
 * Record VR actions once and replay each time you change code
 * Replay at 2x to shorten test cycles
@@ -9,28 +9,27 @@ Tired of pulling your headset on everytime you change code?
 Demo: [https://www.youtube.com/watch?v=GaCRjhzMMMg](https://www.youtube.com/watch?v=GaCRjhzMMMg)
 
 ## Installation
-1. Download the latest (hotfix2) [OpenVR Input Emulator](https://github.com/matzman666/OpenVR-InputEmulator/releases) and run the installer (close SteamVR first)
-2. Download the latest [OpenVR Input Recorder](https://github.com/lebek/openvr-input-recorder/releases)
+Download the latest binary from the [releases section](https://github.com/lebek/openvr-input-recorder/releases). Close SteamVR (important!) and run the installer.
 
 ## Usage
 To record:
 ```
-$ ./openvr-input-recorder.exe record my_recording
+$ "C:\Program Files\OpenVR-Input-Recorder\openvr-input-recorder.exe" record my_recording
 ```
 
 To replay:
 ```
-$ ./openvr-input-recorder.exe replay my_recording
+$ "C:\Program Files\OpenVR-Input-Recorder\openvr-input-recorder.exe" replay my_recording
 ```
 
 To replay at 2x speed:
 ```
-$ ./openvr-input-recorder.exe replay my_recording 2
+$ "C:\Program Files\OpenVR-Input-Recorder\openvr-input-recorder.exe" replay my_recording 2
 ```
 
 To loop at 2x speed:
 ```
-$ ./openvr-input-recorder.exe loop my_recording 2
+$ "C:\Program Files\OpenVR-Input-Recorder\openvr-input-recorder.exe" loop my_recording 2
 ```
 
 ## Tips

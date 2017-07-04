@@ -241,12 +241,12 @@ int get_virtual_device(vrinputemulator::VRInputEmulator& inputEmulator, std::str
 	return inputEmulator.addVirtualDevice(vrinputemulator::VirtualDeviceType::TrackedController, serial, true);
 }
 
-int get_interval(double t, OVRTimeline& timeline) {
-	if (t < timeline.samples(0).time()) return 0;
+int get_interval(long long t, OVRTimeline& timeline) {
+	if (t < (long long)timeline.samples(0).time()) return 0;
 
 	for (int i = 0; i < timeline.samples().size() - 1; i++) {
 		auto sample = timeline.samples(i);
-		if (sample.time() > t) {
+		if ((long long)sample.time() > t) {
 			return i - 1;
 		}
 	}
