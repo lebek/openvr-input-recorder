@@ -265,6 +265,8 @@ void replay(int argc, char *argv[]) {
 		throw std::runtime_error("Error: Failed to parse recording.");
 	}
 
+	bool loop = std::strcmp(argv[1], "loop") == 0;
+
 	int speed = 1;
 	if (argc > 3) speed = atoi(argv[3]);
 
@@ -383,7 +385,15 @@ void replay(int argc, char *argv[]) {
 			// pop sample
 			
 			int sample_idx = get_interval(t, *it);
-			if (sample_idx == it->samples_size() - 2) goto theEnd;
+			if (sample_idx == it->samples_size() - 2) {
+				if (loop) {
+					startTime = std::chrono::system_clock::now();
+					continue;
+				}
+				else { 
+					goto theEnd; 
+				}
+			}
 			//auto a = std::chrono::system_clock::now();
 			auto sample = it->samples(sample_idx);
 			auto sample2 = it->samples(sample_idx+1);
@@ -450,7 +460,7 @@ int main (int argc, char *argv[])
 	try {
 		if (std::strcmp(argv[1], "record") == 0) {
 			record(argc, argv);
-		} else if (std::strcmp(argv[1], "replay") == 0) {
+		} else if (std::strcmp(argv[1], "replay") == 0 || std::strcmp(argv[1], "loop") == 0) {
 			replay(argc, argv);
 		}
 		else {

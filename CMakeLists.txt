@@ -8,16 +8,24 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-find_library(INPUT_EMULATOR_LIBRARIES
+find_library(INPUT_EMULATOR_LIBRARIES_RELEASE
 	NAMES
 		libvrinputemulator
 	PATHS
 		${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/OpenVR-InputEmulator
 	PATH_SUFFIXES
-		Debug/lib/x86
-		Debug/lib/x64
-		Release/lib/x86
 		Release/lib/x64
+	NO_DEFAULT_PATH
+	NO_CMAKE_FIND_ROOT_PATH
+)
+
+find_library(INPUT_EMULATOR_LIBRARIES_DEBUG
+	NAMES
+		libvrinputemulator
+	PATHS
+		${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/OpenVR-InputEmulator
+	PATH_SUFFIXES
+		Debug/lib/x64
 	NO_DEFAULT_PATH
 	NO_CMAKE_FIND_ROOT_PATH
 )
@@ -52,7 +60,7 @@ SET(Protobuf_LIBRARY_DEBUG ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/protobuf/cmake
 find_package(Protobuf REQUIRED)
 
 file(GLOB_RECURSE openvr_input_recorder_sources "src/*.cc")
-MESSAGE( STATUS "LIB: " ${OPENVR_INCLUDE_DIR})
+MESSAGE( STATUS "LIB: " ${INPUT_EMULATOR_LIBRARIES_RELEASE})
 add_executable(openvr-input-recorder ${openvr_input_recorder_sources} ${PROTO_HEADER} ${PROTO_SRC})
 target_include_directories(openvr-input-recorder SYSTEM PUBLIC
   src/
@@ -62,8 +70,22 @@ target_include_directories(openvr-input-recorder SYSTEM PUBLIC
   ${Boost_INCLUDE_DIRS}
 )
 target_link_libraries(openvr-input-recorder 
-	debug ${OPENVR_LIBRARIES} ${Protobuf_LIBRARY_DEBUG} ${INPUT_EMULATOR_LIBRARIES}  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/OpenVR-InputEmulator/third-party/boost_1_63_0/lib64-msvc-14.0/libboost_date_time-vc140-mt-sgd-1_63.lib
-	optimized ${OPENVR_LIBRARIES} ${PROTOBUF_LIBRARY} ${INPUT_EMULATOR_LIBRARIES}  ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/OpenVR-InputEmulator/third-party/boost_1_63_0/lib64-msvc-14.0/libboost_date_time-vc140-mt-sgd-1_63.lib
+	${OPENVR_LIBRARIES}
+)
+
+target_link_libraries(openvr-input-recorder 
+	debug ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/OpenVR-InputEmulator/third-party/boost_1_63_0/lib64-msvc-14.0/libboost_date_time-vc140-mt-sgd-1_63.lib
+	optimized ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/OpenVR-InputEmulator/third-party/boost_1_63_0/lib64-msvc-14.0/libboost_date_time-vc140-mt-s-1_63.lib
+)
+
+target_link_libraries(openvr-input-recorder 
+	debug ${INPUT_EMULATOR_LIBRARIES_DEBUG} 
+	optimized ${INPUT_EMULATOR_LIBRARIES_RELEASE}
+)
+
+target_link_libraries(openvr-input-recorder 
+	debug ${Protobuf_LIBRARY_DEBUG} 
+	optimized ${Protobuf_LIBRARY}
 )
 
 add_custom_command(TARGET openvr-input-recorder POST_BUILD 
