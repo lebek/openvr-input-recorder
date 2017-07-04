@@ -23,4 +23,4 @@ $ ./openvr-input-recorder.exe replay my_recording
 * Input recording/playback doesn't work very well for testing non-deterministic stuff, for obvious reasons
 
 ### For testing multiplayer
-* You'll need 2 or more machines, but only one headset. Record to a file accessible by all machines (I use Google Drive), and playback on each machine as you see fit.
+* You'll need 2 or more machines, but only one headset. Record to a file accessible by all machines (I use Google Drive). Launch your app on all machines and playback the recording(s) as you see fit.
