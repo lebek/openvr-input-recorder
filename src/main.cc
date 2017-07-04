@@ -265,14 +265,16 @@ void replay(int argc, char *argv[]) {
 		throw std::runtime_error("Error: Failed to parse recording.");
 	}
 
-	int speed = 1;
-	if (argc > 3) speed = atoi(argv[3]);
-
+	bool vr_is_ready = true;
 	vr::HmdError err;
 	vr::IVRSystem *p = vr::VR_Init(&err, vr::VRApplication_Background);
 	if (err != vr::HmdError::VRInitError_None) {
-		throw std::runtime_error("HmdError");
+		vr_is_ready = false;
+		//throw std::runtime_error("HmdError");
 	}
+
+	int speed = 1;
+	if (argc > 3) speed = atoi(argv[3]);
 
 	/* Setup virtual devices for each recorded device, and redirect them to original device (if present) */
 	auto devices = recording.devices();
@@ -280,34 +282,27 @@ void replay(int argc, char *argv[]) {
 	inputEmulator.connect();
 	std::map<int, int> device_to_virtual;
 	for (auto it = devices.begin(); it != devices.end(); ++it) {
-		if (it->device_class() != vr::TrackedDeviceClass_Controller && it->device_class() != vr::TrackedDeviceClass_HMD) {
+		/*if (it->device_class() != vr::TrackedDeviceClass_Controller && it->device_class() != vr::TrackedDeviceClass_HMD) {
 			std::cout << "Not controller or HMD" << std::endl;
 			continue;
-		}
+		}*/std::cout << "1" << std::endl;
 
 		std::string serial = "";
 		if (get_serial_number(*it, serial)) {
 			std::cout << "No serial" << std::endl;
 			continue;
-		}
-
-		// find connected device
-		int ovr_id = get_connected_device(serial);
-		if (ovr_id == -1) {
-			std::cout << serial << " not connected" << std::endl;
-			continue;
-		}
-
-		std::cout << "Found " << serial << " @ " << ovr_id << std::endl;
+		}std::cout << "2" << std::endl;
 
 		char buffer[256];
-		sprintf_s(buffer, sizeof(buffer), "virtual-%s", serial.c_str());
-		auto virtual_id = get_virtual_device(inputEmulator, buffer);
+		if (vr_is_ready) sprintf_s(buffer, sizeof(buffer), "virtual-%s", serial.c_str());
+		else sprintf_s(buffer, sizeof(buffer), "%s", serial.c_str());
 
+		auto virtual_id = get_virtual_device(inputEmulator, buffer);
+		std::cout << "4" << std::endl;
 		auto properties = it->properties();
 		for (auto it2 = properties.begin(); it2 != properties.end(); ++it2) {
 			/* Skip serial */
-			if (it2->identifier() == 1002) continue;
+			if (vr_is_ready && it2->identifier() == 1002) continue;
 
 			if (it2->type() == OVRDeviceProperty_Type::OVRDeviceProperty_Type_String) {
 				inputEmulator.setVirtualDeviceProperty(virtual_id, (vr::ETrackedDeviceProperty)it2->identifier(), it2->string_value());
@@ -316,7 +311,7 @@ void replay(int argc, char *argv[]) {
 				inputEmulator.setVirtualDeviceProperty(virtual_id, (vr::ETrackedDeviceProperty)it2->identifier(), it2->bool_value());
 			} 
 			else if (it2->type() == OVRDeviceProperty_Type::OVRDeviceProperty_Type_Int32) {
-				if (it2->identifier() == 1029) {
+				if (false && it2->identifier() == 1029) {
 					inputEmulator.setVirtualDeviceProperty(virtual_id, (vr::ETrackedDeviceProperty)it2->identifier(), vr::TrackedDeviceClass_Controller);
 				}
 				else {
@@ -330,25 +325,49 @@ void replay(int argc, char *argv[]) {
 				inputEmulator.setVirtualDeviceProperty(virtual_id, (vr::ETrackedDeviceProperty)it2->identifier(), it2->float_value());
 			}
 			else if (it2->type() == OVRDeviceProperty_Type::OVRDeviceProperty_Type_Matrix34) {
-				//inputEmulator.setVirtualDeviceProperty(virtual_id, (vr::ETrackedDeviceProperty)it2->identifier(), it2->matrix34_value());
+				vr::HmdMatrix34_t matrix34;
+				for (int i = 0; i < 3; ++i) {
+					for (int j = 0; j < 4; ++j) {
+						matrix34.m[i][j] = it2->matrix34_value(i*4 + j);
+					}
+				}
+				inputEmulator.setVirtualDeviceProperty(virtual_id, (vr::ETrackedDeviceProperty)it2->identifier(), matrix34);
 			}
 		}
 		inputEmulator.publishVirtualDevice(virtual_id);
-		
-		auto info = inputEmulator.getVirtualDeviceInfo(virtual_id);
 
-		// Sometimes takes a few ticks for OVR to register the new device... we wait
-		while (info.openvrDeviceId > vr::k_unMaxTrackedDeviceCount) {
-			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-			info = inputEmulator.getVirtualDeviceInfo(virtual_id);
+		if (vr_is_ready) {
+			auto info = inputEmulator.getVirtualDeviceInfo(virtual_id);
+
+			// Sometimes takes a few ticks for OVR to register the new device... we wait
+			while (info.openvrDeviceId > vr::k_unMaxTrackedDeviceCount) {
+				std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+				info = inputEmulator.getVirtualDeviceInfo(virtual_id);
+			}
+
+			// find connected device
+			int ovr_id = get_connected_device(serial);
+			if (ovr_id == -1) {
+				std::cout << serial << " not connected" << std::endl;
+				continue;
+			}
+
+			std::cout << "Found " << serial << " @ " << ovr_id << std::endl;
+
+			std::cout << "Forwarding: " << info.openvrDeviceId << " -> " << ovr_id << std::endl;
+			inputEmulator.setDeviceNormalMode(info.openvrDeviceId);
+			inputEmulator.setDeviceNormalMode(ovr_id);
+			inputEmulator.setDeviceRedictMode(info.openvrDeviceId, ovr_id);
 		}
 
-		std::cout << "Forwarding: " << info.openvrDeviceId << " -> " << ovr_id << std::endl;
-		inputEmulator.setDeviceNormalMode(info.openvrDeviceId);
-		inputEmulator.setDeviceNormalMode(ovr_id);
-		inputEmulator.setDeviceRedictMode(info.openvrDeviceId, ovr_id);
 		device_to_virtual.insert(std::pair<int, int>(it->id(), virtual_id));
 	}
+
+	p = vr::VR_Init(&err, vr::VRApplication_Background);
+	if (err != vr::HmdError::VRInitError_None) {
+		throw std::runtime_error("HmdError");
+	}
+	//vr::VRSystem()->
 
 	std::cout << "Press S to stop playback" << std::endl;
 
