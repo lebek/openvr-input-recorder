@@ -3,7 +3,7 @@
 	url = https://github.com/ValveSoftware/openvr.git
 [submodule "thirdparty/protobuf"]
 	path = thirdparty/protobuf
-	url = git@github.com:lebek/protobuf.git
+	url = https://github.com/lebek/protobuf.git
 [submodule "thirdparty/OpenVR-InputEmulator"]
 	path = thirdparty/OpenVR-InputEmulator
-	url = git@github.com:matzman666/OpenVR-InputEmulator.git
+	url = https://github.com/matzman666/OpenVR-InputEmulator.git
