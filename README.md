@@ -9,7 +9,7 @@ Tired of pulling your headset on everytime you change code?
 Demo: [https://www.youtube.com/watch?v=GaCRjhzMMMg](https://www.youtube.com/watch?v=GaCRjhzMMMg)
 
 ## Installation
-Download the latest binary from the [releases section](https://github.com/lebek/openvr-input-recorder/releases). Close SteamVR (important!) and run the installer.
+Download the latest binary from the [release section](https://github.com/lebek/openvr-input-recorder/releases). Close SteamVR (important!) and run the installer.
 
 ## Usage
 To record:
