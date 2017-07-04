@@ -330,7 +330,13 @@ void replay(int argc, char *argv[]) {
 				inputEmulator.setVirtualDeviceProperty(virtual_id, (vr::ETrackedDeviceProperty)it2->identifier(), it2->float_value());
 			}
 			else if (it2->type() == OVRDeviceProperty_Type::OVRDeviceProperty_Type_Matrix34) {
-				//inputEmulator.setVirtualDeviceProperty(virtual_id, (vr::ETrackedDeviceProperty)it2->identifier(), it2->matrix34_value());
+				vr::HmdMatrix34_t matrix34;
+				for (int i = 0; i < 3; ++i) {
+					for (int j = 0; j < 4; ++j) {
+						matrix34.m[i][j] = it2->matrix34_value(i * 4 + j);
+					}
+				}
+				inputEmulator.setVirtualDeviceProperty(virtual_id, (vr::ETrackedDeviceProperty)it2->identifier(), matrix34);
 			}
 		}
 		inputEmulator.publishVirtualDevice(virtual_id);
