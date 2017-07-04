@@ -2,7 +2,7 @@
 Tired of pulling your headset on everytime you change code?
 
 * Record VR actions once and replay each time you change code
-* Replay at 2x to shorten test cycles
+* Replay at 2x/4x to shorten test cycles
 * Test multiplayer VR on your own (and, in theory, without owning multiple headsets, but this isn't working yet)
 * Since tracking data is recorded/injected at the OpenVR driver level, it works with any game engine
 
