@@ -6,6 +6,12 @@ Tired of pulling your headset on everytime you change code?
 * Replay at 2x to shorten test cycles
 * Since tracking data is recorded/injected at the OpenVR driver level, it works with any game engine
 
+Demo: https://www.youtube.com/watch?v=GaCRjhzMMMg
+
+## Installation
+1. Download the latest (hotfix2) [OpenVR Input Emulator](https://github.com/matzman666/OpenVR-InputEmulator/releases) and run the installer (close SteamVR first)
+2. Download the latest [OpenVR Input Recorder](https://github.com/lebek/openvr-input-recorder/releases)
+
 ## Usage
 To record:
 ```
@@ -16,6 +22,13 @@ To replay:
 ```
 $ ./openvr-input-recorder.exe replay my_recording
 ```
+
+To replay at 2x speed:
+```
+$ ./openvr-input-recorder.exe replay my_recording 2
+```
+
+## Tips
 
 ### For testing/debugging
 * I recommend making recordings that leave your app in the same state at the start and end. Otherwise you'll have to put on the headset to reset the app.
