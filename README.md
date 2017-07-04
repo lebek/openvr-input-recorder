@@ -1,4 +1,4 @@
-# OpenVR Input Recorder
+# :red_circle: OpenVR Input Recorder
 Tired of pulling your headset on everytime you change code? 
 
 * Record VR actions once and replay each time you change code
